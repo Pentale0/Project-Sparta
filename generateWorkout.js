@@ -243,19 +243,24 @@ function generateWorkout({ goal, bodyPart, timeMinutes } = {}) {
   const maxExercises = Math.min(12, Math.max(3, Math.round(minutes / 5)));
 
   for (const exercise of candidates) {
-    if (main.length >= maxExercises) break;
+    if (main.length >= maxExercises || remaining <= 0) break;
 
-    const item = prescribe(exercise, profile);
-    const seconds = exerciseSeconds(item);
+    const ideal = prescribe(exercise, profile);
+    // Time for ONE set of this exercise (work + rest).
+    const perSet =
+      (ideal.duration !== null ? ideal.duration : ideal.reps * 3) + ideal.rest;
 
-    // Add it only if it fits in the remaining time.
-    // (For a very short workout, allow the first one regardless.)
-    if (seconds <= remaining || main.length === 0) {
-      main.push(item);
-      remaining -= seconds;
-    }
+    // How many sets fit in the time we have left?
+    const setsThatFit = Math.floor(remaining / perSet);
 
-    if (remaining <= 0) break;
+    // Prefer at least 2 sets; but if nothing is chosen yet, accept 1
+    // so short workouts still get at least one main exercise.
+    const minSets = main.length === 0 ? 1 : 2;
+    if (setsThatFit < minSets) continue; // too long for the time left
+
+    const sets = Math.min(ideal.sets, setsThatFit);
+    main.push({ ...ideal, sets });
+    remaining -= sets * perSet;
   }
 
   // --- Estimated total time ---
