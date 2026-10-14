@@ -6,21 +6,19 @@
 // Public function:
 //   generateWorkout({ goal, bodyPart, timeMinutes })
 //
-// Returns:
+// Returns (this shape is what app.js renders):
 //   {
-//     title:        "Strength Chest Workout",
-//     warmUp:       [ { name, sets, reps, duration, rest } ],
-//     main:         [ { name, sets, reps, duration, rest } ],
-//     coolDown:     [ { name, sets, reps, duration, rest } ],
-//     totalMinutes: 30
+//     title:              "Strength Chest Workout",
+//     warmUp:             [ "Jumping Jack (45s)", ... ],   // strings
+//     exercises:          [ { name, sets, reps, duration, rest } ],
+//     coolDown:           [ "Hamstring Stretch (45s)", ... ], // strings
+//     estimatedTotalTime: 30
 //   }
 //
-// Note on the shape of every exercise item:
+// Main exercise items:
 //   - reps-based  -> reps is a number, duration is null
 //   - time-based  -> duration is seconds, reps is null
 //   - rest is always in seconds
-// Every item (even warm-up/cool-down) uses the same shape so
-// Person A can render them all with one loop.
 // ============================================================
 
 // ------------------------------------------------------------
@@ -140,6 +138,12 @@ function prescribe(exercise, profile) {
 function exerciseSeconds(item) {
   const work = item.duration !== null ? item.duration : item.reps * 3;
   return item.sets * (work + item.rest);
+}
+
+// Warm-up/cool-down are plain text for the page, e.g.
+// "Jumping Jack (45s)". Keeps app.js rendering simple.
+function formatMove(move) {
+  return `${move.name} (${move.duration}s)`;
 }
 
 // ------------------------------------------------------------
@@ -262,10 +266,10 @@ function generateWorkout({ goal, bodyPart, timeMinutes } = {}) {
 
   return {
     title: `${goalLabel} ${partLabel} Workout`,
-    warmUp: warmUp,
-    main: main,
-    coolDown: coolDown,
-    totalMinutes: totalMinutes,
+    warmUp: warmUp.map(formatMove),
+    exercises: main,
+    coolDown: coolDown.map(formatMove),
+    estimatedTotalTime: totalMinutes,
   };
 }
 
