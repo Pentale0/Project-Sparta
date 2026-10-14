@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Sparta — Workout Generator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>Project Sparta</h1>
+    <p class="tagline">Tell it your goal, target and time — get a workout.</p>
+  </header>
+
+  <main>
+    <form id="workoutForm" class="controls">
+      <div class="field">
+        <label for="goal">Goal</label>
+        <select id="goal" name="goal">
+          <option value="strength">Strength</option>
+          <option value="hypertrophy">Muscle growth (hypertrophy)</option>
+          <option value="fat loss">Fat loss</option>
+          <option value="endurance">Endurance</option>
+          <option value="mobility">Mobility</option>
+          <option value="general fitness" selected>General fitness</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="bodyPart">Body part</label>
+        <select id="bodyPart" name="bodyPart">
+          <option value="chest">Chest</option>
+          <option value="back">Back</option>
+          <option value="legs">Legs</option>
+          <option value="shoulders">Shoulders</option>
+          <option value="arms">Arms</option>
+          <option value="core">Core</option>
+          <option value="full body" selected>Full body</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="timeMinutes">Time (minutes)</label>
+        <input
+          id="timeMinutes"
+          name="timeMinutes"
+          type="number"
+          min="5"
+          max="180"
+          step="5"
+          value="45"
+        />
+      </div>
+
+      <button type="submit" id="generateBtn">Generate workout</button>
+    </form>
+
+    <section id="output" class="output" aria-live="polite">
+      <p class="placeholder">Your workout will appear here.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>General fitness suggestions only — not medical advice. Warm up and stop if something hurts.</p>
+  </footer>
+
+  <script src="generator.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
